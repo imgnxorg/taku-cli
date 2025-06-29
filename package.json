@@ -1,6 +1,6 @@
 {
-  "name": "@imgnx/taku",
-  "version": "2.0.1",
+  "name": "gittaku",
+  "version": "2.2.4",
   "description": "Taku CLI: Project generator and utility for the Taku framework.",
   "bin": {
     "taku": "./cli.js"

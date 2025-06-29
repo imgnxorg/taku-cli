@@ -8,18 +8,88 @@ MIN_WIDTH=50
 TERM_WIDTH=$(tput cols 2>/dev/null || echo 80)
 if [[ "$TERM_WIDTH" -ge "$MIN_WIDTH" ]]; then
   cat <<EOF
-                     .                    
-                   .'|                    
-   .|            .'  |                    
-   .' |_     __   <    |                    
- .'     | .:--.'.  |   | ____      _    _   
-'--.  .-'/ |   \ | |   | \ .'     | '  / |  
-   |  |  \`" __ | | |   |/  .     .' | .' |  
-   |  |   .'.''| | |    /\  \    /  | /  |  
-   |  '.'/ /   | |_|   |  \  \  |   \`'.  |  
-   |   / \ \._,\ '/'    \  \  \ '   .'|  '/ 
-   \`'-'   \`--'  \`"'------'  '---'\`-'  \`--'  
+▗▄▄▄▖▗▄▖ ▗▖ ▗▖▗▖ ▗▖
+  █ ▐▌ ▐▌▐▌▗▞▘▐▌ ▐▌
+  █ ▐▛▀▜▌▐▛▚▖ ▐▌ ▐▌
+  █ ▐▌ ▐▌▐▌ ▐▌▝▚▄▞▘
+                   
 EOF
+fi
+
+# ---- Taku Init Command ----
+if [[ "$1" == "init" ]]; then
+  CONFIG_URL="https://github.com/imgnxorg/taku/raw/refs/heads/main/export/taku.config.zip"
+  CONFIG_ZIP="taku.config.zip"
+  # shellcheck disable=SC2034
+  CONFIG_DEST="taku.config.js"
+
+  echo "🌐 Downloading Taku config from downstream..."
+  if command -v curl >/dev/null 2>&1; then
+    curl -fsSL "$CONFIG_URL" -o "$CONFIG_ZIP"
+  elif command -v wget >/dev/null 2>&1; then
+    wget -q "$CONFIG_URL" -O "$CONFIG_ZIP"
+  else
+    echo "❌ Neither curl nor wget is installed. Cannot download config."
+    exit 1
+  fi
+
+  if command -v unzip >/dev/null 2>&1; then
+    unzip -o "$CONFIG_ZIP" -d .
+    echo "✅ Imported taku.config.js from downstream."
+    rm -f "$CONFIG_ZIP"
+  else
+    echo "❌ unzip is not installed. Cannot extract config."
+    exit 1
+  fi
+
+  # ---- Parse and Use Config ----
+  if [[ ! -f taku.config.js ]]; then
+    echo "❌ taku.config.js not found after extraction."
+    exit 1
+  fi
+
+  # Use Node.js script to parse config and write to .env file
+  if command -v node >/dev/null 2>&1; then
+    node src/taku.config.parse.js
+    if [[ ! -f taku.config.env ]]; then
+      echo "❌ Failed to generate taku.config.env."
+      exit 1
+    fi
+    # shellcheck disable=SC1091
+    source taku.config.env
+  else
+    echo "❌ Node.js is required to parse taku.config.js."
+    exit 1
+  fi
+
+  # Prompt if files/folders will be clobbered
+  for dir in frontend src assets examples; do
+    if [[ -e "$dir" ]]; then
+      read -r -p "⚠️ '$dir' already exists and may be overwritten. Continue? [y/N] " yn
+      case $yn in
+      [Yy]*) ;;
+      *)
+        echo "Aborted."
+        exit 1
+        ;;
+      esac
+    fi
+  done
+
+  # Proceed with setup using config values
+  echo "📁 Creating project structure..."
+  mkdir -p frontend/src frontend/public src assets examples
+
+  # Example: Use config values (expand as needed)
+  echo "Frontend type: $FRONTEND_TYPE"
+  echo "Frontend build command: $FRONTEND_BUILD_CMD"
+  echo "Backend type: $BACKEND_TYPE"
+  echo "Backend build command: $BACKEND_BUILD_CMD"
+
+  # ...rest of setup logic here, using config values...
+
+  echo "✅ Taku project initialized from config!"
+  exit 0
 fi
 
 # ---- Usage & Argument Parsing ----
@@ -270,34 +340,6 @@ fn main() -> wry::Result<()> {
 }
 EOF
 
-# ---- Taku Init Command ----
-if [[ "$1" == "init" ]]; then
-  CONFIG_URL="https://raw.githubusercontent.com/imgnxorg/taku/main/export/taku.config.zip"
-  CONFIG_ZIP="taku.config.zip"
-  # shellcheck disable=SC2034
-  CONFIG_DEST="taku.config.js"
-
-  echo "🌐 Downloading Taku config from downstream..."
-  if command -v curl >/dev/null 2>&1; then
-    curl -fsSL "$CONFIG_URL" -o "$CONFIG_ZIP"
-  elif command -v wget >/dev/null 2>&1; then
-    wget -q "$CONFIG_URL" -O "$CONFIG_ZIP"
-  else
-    echo "❌ Neither curl nor wget is installed. Cannot download config."
-    exit 1
-  fi
-
-  if command -v unzip >/dev/null 2>&1; then
-    unzip -o "$CONFIG_ZIP" -d .
-    echo "✅ Imported taku.config.js from downstream."
-    rm -f "$CONFIG_ZIP"
-  else
-    echo "❌ unzip is not installed. Cannot extract config."
-    exit 1
-  fi
-  exit 0
-fi
-
 # ---- Download and Import Taku Frame Config ----
 CONFIG_URL="https://raw.githubusercontent.com/imgnxorg/taku/main/taku-frame/export/taku.config.zip"
 CONFIG_ZIP="taku.config.zip"
@@ -473,7 +515,8 @@ module.exports = () => {
 EOF
 
 # ---- Frontend HTML Template ----
-echo "📄 Setting up HTML template..."
+echo "📄 Setting up frontend/public/index.html..."
+mkdir -p frontend/public
 cat <<EOF >frontend/public/index.html
 <!DOCTYPE html>
 <html lang="en">
@@ -489,7 +532,8 @@ cat <<EOF >frontend/public/index.html
 EOF
 
 # ---- Frontend Entry Point ----
-echo "⚡ Setting up React entry point..."
+echo "⚡ Setting up frontend/src/index.jsx..."
+mkdir -p frontend/src
 cat <<EOF >frontend/src/index.jsx
 import React from 'react';
 import { createRoot } from 'react-dom/client';
@@ -502,7 +546,7 @@ root.render(<App />);
 EOF
 
 # ---- Global CSS with Tailwind ----
-echo "🎨 Setting up global CSS..."
+echo "🎨 Setting up frontend/src/styles/global.css..."
 mkdir -p frontend/src/styles
 cat <<EOF >frontend/src/styles/global.css
 @import "tailwindcss/base";
