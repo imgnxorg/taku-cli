@@ -1,6 +1,6 @@
 {
   "name": "gittaku",
-  "version": "2.2.4",
+  "version": "2.3.6",
   "description": "Taku CLI: Project generator and utility for the Taku framework.",
   "bin": {
     "taku": "./cli.js"

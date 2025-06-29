@@ -16,6 +16,37 @@ if [[ "$TERM_WIDTH" -ge "$MIN_WIDTH" ]]; then
 EOF
 fi
 
+# ---- Framework Selection Switch ----
+SUPPORTED_FRAMEWORKS=("react" "rust" "workers (beta)")
+SELECTED_FRAMEWORKS=()
+
+echo "Select frameworks to include in your project:"
+for i in "${!SUPPORTED_FRAMEWORKS[@]}"; do
+  printf "  [%d] %s\n" $((i + 1)) "${SUPPORTED_FRAMEWORKS[$i]}"
+done
+echo "Enter numbers separated by spaces (e.g. 1 2), or press Enter for all: "
+read -r FRAMEWORK_SELECTION
+
+if [[ -z "$FRAMEWORK_SELECTION" ]]; then
+  SELECTED_FRAMEWORKS=("${SUPPORTED_FRAMEWORKS[@]}")
+else
+  for idx in $FRAMEWORK_SELECTION; do
+    if [[ "$idx" =~ ^[0-9]+$ ]] && ((idx >= 1 && idx <= ${#SUPPORTED_FRAMEWORKS[@]})); then
+      SELECTED_FRAMEWORKS+=("${SUPPORTED_FRAMEWORKS[$((idx - 1))]}")
+    else
+      echo "Invalid selection: $idx"
+      exit 1
+    fi
+  done
+fi
+
+# Export as comma-separated for later use
+export TAKU_SELECTED_FRAMEWORKS="$(
+  IFS=,
+  echo "${SELECTED_FRAMEWORKS[*]}"
+)"
+echo "Selected frameworks: $TAKU_SELECTED_FRAMEWORKS"
+
 # ---- Taku Init Command ----
 if [[ "$1" == "init" ]]; then
   CONFIG_URL="https://github.com/imgnxorg/taku/raw/refs/heads/main/export/taku.config.zip"
@@ -48,22 +79,31 @@ if [[ "$1" == "init" ]]; then
     exit 1
   fi
 
-  # Use Node.js script to parse config and write to .env file
+  # Find CLI script directory for parser
+  CLI_DIR="$(cd "$(dirname -- "$0")" && pwd)"
+
+  # Use Node.js script to parse config and write to .env file in hidden directory
+  TAKU_ENV_DIR=".taku"
+  mkdir -p "$TAKU_ENV_DIR"
   if command -v node >/dev/null 2>&1; then
-    node src/taku.config.parse.js
-    if [[ ! -f taku.config.env ]]; then
-      echo "❌ Failed to generate taku.config.env."
+    node "$CLI_DIR/src/taku.config.parse.js" "$TAKU_ENV_DIR/config.env"
+    if [[ ! -f "$TAKU_ENV_DIR/config.env" ]]; then
+      echo "❌ Failed to generate $TAKU_ENV_DIR/config.env."
       exit 1
     fi
     # shellcheck disable=SC1091
-    source taku.config.env
+    source "$TAKU_ENV_DIR/config.env"
   else
     echo "❌ Node.js is required to parse taku.config.js."
     exit 1
   fi
 
+  # Use framework/type names from config for directory creation
+  FRONTEND_DIR="$FRONTEND_TYPE"
+  BACKEND_DIR="$BACKEND_TYPE"
+
   # Prompt if files/folders will be clobbered
-  for dir in frontend src assets examples; do
+  for dir in "$FRONTEND_DIR" "$BACKEND_DIR" src assets examples; do
     if [[ -e "$dir" ]]; then
       read -r -p "⚠️ '$dir' already exists and may be overwritten. Continue? [y/N] " yn
       case $yn in
@@ -78,13 +118,39 @@ if [[ "$1" == "init" ]]; then
 
   # Proceed with setup using config values
   echo "📁 Creating project structure..."
-  mkdir -p frontend/src frontend/public src assets examples
+  mkdir -p "$FRONTEND_DIR/src" "$FRONTEND_DIR/public" "$BACKEND_DIR/src" src assets examples
 
   # Example: Use config values (expand as needed)
   echo "Frontend type: $FRONTEND_TYPE"
   echo "Frontend build command: $FRONTEND_BUILD_CMD"
   echo "Backend type: $BACKEND_TYPE"
   echo "Backend build command: $BACKEND_BUILD_CMD"
+
+  # Cloudflare Worker setup if selected
+  if [[ "$FRONTEND_TYPE" == "workers" || "$BACKEND_TYPE" == "workers" || "$TAKU_SELECTED_FRAMEWORKS" == *"workers"* ]]; then
+    WORKER_DIR="workers"
+    echo "⚡ Setting up Cloudflare Worker in $WORKER_DIR..."
+    mkdir -p "$WORKER_DIR"
+    cat <<'EOW' >"$WORKER_DIR/index.js"
+export default {
+  async fetch(request, env, ctx) {
+    return new Response('Hello from your Cloudflare Worker!', {
+      headers: { 'content-type': 'text/plain' },
+    });
+  },
+};
+EOW
+    cat <<'EOW' >"$WORKER_DIR/wrangler.toml"
+name = "taku-worker-demo"
+type = "javascript"
+main = "index.js"
+compatibility_date = "2025-06-29"
+EOW
+    echo "To run locally:"
+    echo "  npx miniflare $WORKER_DIR/index.js --watch"
+    echo "Or deploy with Wrangler:"
+    echo "  npx wrangler dev $WORKER_DIR/index.js"
+  fi
 
   # ...rest of setup logic here, using config values...
 

@@ -18,8 +18,10 @@ const out = {
   BACKEND_BUILD_CMD: config.backend?.buildCommand || "",
 };
 
+const outputPath = process.argv[2] || "taku.config.env";
+
 fs.writeFileSync(
-  "taku.config.env",
+  outputPath,
   Object.entries(out)
     .map(([k, v]) => `${k}="${v}"`)
     .join("\n") + "\n"
