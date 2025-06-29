@@ -492,32 +492,22 @@ EOF
 echo "🎨 Setting up TailwindCSS configuration..."
 cat <<EOF >frontend/tailwind.config.js
 /** @type {import('tailwindcss').Config} */
-const { mauve, mauveDark, violet, violetDark } = require("@radix-ui/colors");
+import {{ mauve, mauveDark, violet, violetDark }} from "@radix-ui/colors";
 
-module.exports = {
+export default {{
   content: ["./src/**/*.{js,jsx,ts,tsx,html}", "./public/index.html"],
-  theme: {
-    extend: {
-      colors: {
-        mauve: { ...mauve },
-        mauveDark: { ...mauveDark },
-        violet: { ...violet },
-        violetDark: { ...violetDark },
-      },
-    },
-  },
+  theme: {{
+    extend: {{
+      colors: {{
+        mauve: {{ ...mauve }},
+        mauveDark: {{ ...mauveDark }},
+        violet: {{ ...violet }},
+        violetDark: {{ ...violetDark }},
+      }},
+    }},
+  }},
   plugins: [],
-};
-EOF
-
-# ---- PostCSS Configuration ----
-echo "⚙️ Setting up PostCSS configuration..."
-cat <<EOF >frontend/postcss.config.mjs
-export default {
-  plugins: {
-    "@tailwindcss/postcss": {},
-  },
-};
+}};
 EOF
 
 # ---- Webpack Configuration ----
@@ -525,75 +515,75 @@ echo "📦 Setting up Webpack configuration..."
 cat <<EOF >frontend/webpack.config.js
 // Generated using webpack-cli https://github.com/webpack/webpack-cli
 
-const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+import path from "path";
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
 
 const isProduction = process.env.NODE_ENV === "production";
 
 const stylesHandler = MiniCssExtractPlugin.loader;
 
-const config = {
+const config = {{
   entry: "./src/index.jsx",
-  output: {
-    path: path.resolve(__dirname, "dist"),
-  },
-  devServer: {
+  output: {{
+    path: path.resolve(process.cwd(), "dist"),
+  }},
+  devServer: {{
     open: true,
     host: "localhost",
     historyApiFallback: true, // 🔥 This tells dev server to serve index.html for all routes
-  },
+  }},
   plugins: [
-    new HtmlWebpackPlugin({
+    new HtmlWebpackPlugin({{
       template: "public/index.html",
-    }),
+    }}),
 
     new MiniCssExtractPlugin(),
 
     // Add your plugins here
     // Learn more about plugins from https://webpack.js.org/configuration/plugins/
   ],
-  module: {
+  module: {{
     rules: [
-      {
+      {{
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        use: {
+        use: {{
           loader: "babel-loader",
-          options: {
+          options: {{
             presets: ["@babel/preset-env", "@babel/preset-react"],
-          },
-        },
-      },
-      {
+          }},
+        }},
+      }},
+      {{
         test: /\.css$/i,
         use: [isProduction ? MiniCssExtractPlugin.loader : "style-loader", "css-loader", "postcss-loader"],
-      },
-      {
+      }},
+      {{
         test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
         type: "asset",
-      },
+      }},
 
       // Add your rules for custom modules here
       // Learn more about loaders from https://webpack.js.org/loaders/
     ],
-  },
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src/"),
-    },
+  }},
+  resolve: {{
+    alias: {{
+      "@": path.resolve(process.cwd(), "./src/"),
+    }},
     extensions: [".jsx", ".js", ".tsx", ".ts", ".json"],
-  },
-};
+  }},
+}};
 
-module.exports = () => {
-  if (isProduction) {
+export default () => {{
+  if (isProduction) {{
     config.mode = "production";
-  } else {
+  }} else {{
     config.mode = "development";
-  }
+  }}
   return config;
-};
+}};
 EOF
 
 # ---- Frontend HTML Template ----

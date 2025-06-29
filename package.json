@@ -6,7 +6,7 @@
     "taku": "./cli.js"
   },
   "scripts": {
-    "build": "pkg . --out-path ./dist --targets node16-linux-x64,node16-macos-x64,node16-win-x64",
+    "build": "pkg . --debug --out-path ./bin --targets node16-linux-x64,node16-macos-x64,node16-win-x64",
     "prepublishOnly": "yarn build",
     "prepare": "yarn build",
     "start": "node cli.js"
@@ -26,9 +26,23 @@
   ],
   "packageManager": "yarn@4.9.2",
   "dependencies": {
+    "fs-extra": "^11.3.0",
     "pkg": "^5.8.0"
   },
   "engines": {
     "node": ">=16.0.0"
+  },
+  "pkg": {
+    "assets": [
+      "main.sh",
+      "config.json"
+    ],
+    "external": [
+      "fs",
+      "fs-extra",
+      "child_process"
+    ],
+    "compile": false,
+    "outputPath": "./bin"
   }
 }
