@@ -1,0 +1,593 @@
+[
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // 🧘 ZEN MODE & FOCUS
+  // ═══════════════════════════════════════════════════════════════════════════════
+  {
+    "key": "cmd+k cmd+z",
+    "command": "workbench.action.toggleZenMode"
+  },
+  {
+    "key": "ctrl+z",
+    "command": "workbench.action.toggleZenMode"
+  },
+  {
+    "key": "cmd+escape",
+    "command": "workbench.action.toggleZenMode"
+  },
+  {
+    "key": "ctrl+alt+cmd+space",
+    "command": "workbench.action.toggleScreencastMode"
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // 🖥️ EDITOR GROUP CONTROL & LAYOUT
+  // ═══════════════════════════════════════════════════════════════════════════════
+  
+  // Size Control
+  {
+    "key": "cmd+numpad_add",
+    "command": "workbench.action.increaseViewSize"
+  },
+  {
+    "key": "cmd+numpad_subtract",
+    "command": "workbench.action.decreaseViewSize"
+  },
+  {
+    "key": "cmd+shift+numpad_add",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        "workbench.action.increaseViewSize",
+        "workbench.action.increaseViewSize",
+        "workbench.action.increaseViewSize",
+        "workbench.action.increaseViewSize",
+        "workbench.action.increaseViewSize",
+        "workbench.action.increaseViewSize",
+        "workbench.action.increaseViewSize",
+        "workbench.action.increaseViewSize",
+        "workbench.action.increaseViewSize"
+      ]
+    }
+  },
+  {
+    "key": "cmd+shift+numpad_subtract",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        "workbench.action.decreaseViewSize",
+        "workbench.action.decreaseViewSize",
+        "workbench.action.decreaseViewSize",
+        "workbench.action.decreaseViewSize",
+        "workbench.action.decreaseViewSize",
+        "workbench.action.decreaseViewSize",
+        "workbench.action.decreaseViewSize",
+        "workbench.action.decreaseViewSize",
+        "workbench.action.decreaseViewSize"
+      ]
+    }
+  },
+
+  // Layout Control
+  {
+    "key": "cmd+numpad0",
+    "command": "workbench.action.showMultipleEditorTabs"
+  },
+  {
+    "key": "cmd+numpad_divide",
+    "command": "workbench.action.evenEditorWidths"
+  },
+  {
+    "key": "cmd+numpad_multiply",
+    "command": "workbench.action.toggleEditorGroupLayout"
+  },
+
+  // Focus Editor Groups
+  {
+    "key": "ctrl+1",
+    "command": "workbench.action.focusFirstEditorGroup"
+  },
+  {
+    "key": "ctrl+2",
+    "command": "workbench.action.focusSecondEditorGroup"
+  },
+  {
+    "key": "ctrl+3",
+    "command": "workbench.action.focusThirdEditorGroup"
+  },
+  {
+    "key": "ctrl+4",
+    "command": "workbench.action.focusFourthEditorGroup"
+  },
+  {
+    "key": "ctrl+alt+cmd+left",
+    "command": "workbench.action.focusPreviousGroup"
+  },
+  {
+    "key": "ctrl+alt+cmd+right",
+    "command": "workbench.action.focusNextGroup"
+  },
+
+  // Move Editors Between Groups
+  {
+    "key": "ctrl+cmd+left",
+    "command": "workbench.action.moveEditorToLeftGroup"
+  },
+  {
+    "key": "ctrl+cmd+right",
+    "command": "workbench.action.moveEditorToRightGroup"
+  },
+  {
+    "key": "ctrl+cmd+up",
+    "command": "workbench.action.moveEditorToAboveGroup"
+  },
+  {
+    "key": "ctrl+cmd+down",
+    "command": "workbench.action.moveEditorToBelowGroup"
+  },
+  {
+    "key": "ctrl+cmd+[",
+    "command": "workbench.action.moveEditorToNextGroup"
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // 🖱️ PANEL & SIDEBAR MANAGEMENT
+  // ═══════════════════════════════════════════════════════════════════════════════
+  {
+    "key": "cmd+`",
+    "command": "workbench.action.focusActivityBar"
+  },
+  {
+    "key": "cmd+1",
+    "command": "workbench.action.focusSideBar",
+    "when": "!sideBarFocus"
+  },
+  {
+    "key": "cmd+1",
+    "command": "workbench.action.toggleSidebarVisibility",
+    "when": "sideBarFocus"
+  },
+  {
+    "key": "cmd+2",
+    "command": "runCommands",
+    "args": {
+      "commands": ["workbench.action.closePanel", "workbench.action.focusActiveEditorGroup"]
+    },
+    "when": "panelVisible || !editorFocus"
+  },
+  {
+    "key": "cmd+shift+2",
+    "command": "workbench.action.maximizeEditorHideSidebar"
+  },
+  {
+    "key": "cmd+4",
+    "command": "workbench.action.toggleAuxiliaryBar"
+  },
+  {
+    "key": "cmd+4",
+    "command": "workbench.action.focusAuxiliaryBar",
+    "when": "!auxiliaryBarFocus"
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // 🧭 NAVIGATION & EDITOR CONTROL
+  // ═══════════════════════════════════════════════════════════════════════════════
+  
+  // Navigation
+  {
+    "key": "cmd+[",
+    "command": "workbench.action.navigateBack"
+  },
+  {
+    "key": "cmd+f",
+    "command": "workbench.action.navigateForward",
+    "when": "!editorTextFocus"
+  },
+  {
+    "key": "ctrl+tab",
+    "command": "workbench.action.navigateEditorGroups"
+  },
+  {
+    "key": "ctrl+shift+left",
+    "command": "workbench.action.focusPreviousPane"
+  },
+  {
+    "key": "ctrl+shift+right",
+    "command": "workbench.action.focusNextPane"
+  },
+  {
+    "key": "home",
+    "command": "workbench.action.focusPreviousPart"
+  },
+  {
+    "key": "end",
+    "command": "workbench.action.focusNextPart"
+  },
+
+  // Editor Tab Management
+  {
+    "key": "shift+cmd+[",
+    "command": "workbench.action.firstEditorInGroup",
+    "when": "editorFocus"
+  },
+  {
+    "key": "shift+cmd+]",
+    "command": "workbench.action.lastEditorInGroup",
+    "when": "editorFocus"
+  },
+  {
+    "key": "shift+cmd+t",
+    "command": "workbench.action.previousEditorInGroup"
+  },
+  {
+    "key": "cmd+]",
+    "command": "workbench.action.nextEditorInGroup"
+  },
+  {
+    "key": "shift+cmd+w",
+    "command": "workbench.action.closeEditorsAndGroup"
+  },
+  {
+    "key": "ctrl+shift+down",
+    "command": "workbench.action.restoreEditorsToMainWindow"
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // 📁 FILE & FOLDER OPERATIONS
+  // ═══════════════════════════════════════════════════════════════════════════════
+  {
+    "key": "cmd+d",
+    "command": "explorer.newFolder",
+    "when": "explorerViewletFocus"
+  },
+  {
+    "key": "cmd+f",
+    "command": "explorer.newFile",
+    "when": "explorerViewletFocus"
+  },
+  {
+    "key": "cmd+k s",
+    "command": "saveAll"
+  },
+  {
+    "key": "ctrl+x ctrl+s",
+    "command": "saveAll",
+    "when": "editorTextFocus"
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // 🔍 SEARCH & FIND
+  // ═══════════════════════════════════════════════════════════════════════════════
+  {
+    "key": "cmd+f",
+    "command": "actions.find",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "cmd+h",
+    "command": "editor.action.startFindReplaceAction",
+    "when": "editorFocus || editorIsOpen"
+  },
+  {
+    "key": "cmd+g s",
+    "command": "workbench.action.gotoSymbol"
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // 🌿 GIT & SOURCE CONTROL
+  // ═══════════════════════════════════════════════════════════════════════════════
+  {
+    "key": "cmd+5",
+    "command": "workbench.view.scm",
+    "when": "!gitOpenRepositoryVisible"
+  },
+  {
+    "key": "cmd+5 a",
+    "command": "git.stageAll"
+  },
+  {
+    "key": "cmd+5 b",
+    "command": "git.branch"
+  },
+  {
+    "key": "cmd+5 c",
+    "command": "git.commit"
+  },
+  {
+    "key": "cmd+6",
+    "command": "git.openRepository"
+  },
+  {
+    "key": "cmd+8",
+    "command": "git.push"
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // 🏗️ TERMINAL MANAGEMENT
+  // ═══════════════════════════════════════════════════════════════════════════════
+  {
+    "key": "cmd+3",
+    "command": "workbench.action.terminal.toggleTerminal",
+    "when": "terminalFocus panelMaximized"
+  },
+  {
+    "key": "shift+cmd+3",
+    "command": "workbench.action.toggleMaximizedPanel",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "ctrl+cmd+up",
+    "command": "workbench.action.terminal.moveToEditor",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "cmd+f",
+    "command": "workbench.action.terminal.focusFind",
+    "when": "terminal.active"
+  },
+
+  // Terminal Resizing
+  {
+    "key": "ctrl+cmd+down",
+    "command": "workbench.action.terminal.resizePaneDown",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "ctrl+cmd+left",
+    "command": "workbench.action.terminal.resizePaneLeft",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "ctrl+cmd+right",
+    "command": "workbench.action.terminal.resizePaneRight",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "ctrl+cmd+up",
+    "command": "workbench.action.terminal.resizePaneUp",
+    "when": "terminalFocus"
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // 📝 EDITOR ACTIONS & FORMATTING
+  // ═══════════════════════════════════════════════════════════════════════════════
+  {
+    "key": "alt+w",
+    "command": "editor.emmet.action.wrapWithAbbreviation"
+  },
+  {
+    "key": "ctrl+cmd+z",
+    "command": "redo"
+  },
+  {
+    "key": "ctrl+cmd+shift+y",
+    "command": "redo"
+  },
+  {
+    "key": "cmd+z",
+    "command": "chatEditor.action.undoHunk",
+    "when": "chatEdits.hasEditorModifications && editorFocus && !chatEdits.isRequestInProgress || chatEdits.hasEditorModifications && notebookCellListFocused && !chatEdits.isRequestInProgress"
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // 📋 CONTENT ANALYSIS & PROMPTS
+  // ═══════════════════════════════════════════════════════════════════════════════
+  {
+    "key": "alt+shift+f",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        "editor.action.formatDocument",
+        "editor.action.autoFix",
+        {
+          "command": "workbench.action.tasks.runTask",
+          "args": "prompt-user"
+        }
+      ]
+    },
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "alt+cmd+r",
+    "command": "workbench.action.chat.run.prompt",
+    "args": {
+      "prompt": "comprehensive"
+    },
+    "when": "editorTextFocus"
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // 📝 MARKDOWN SUPPORT
+  // ═══════════════════════════════════════════════════════════════════════════════
+  {
+    "key": "cmd+k cmd+p",
+    "command": "markdown.showLockedPreviewToSide",
+    "when": "!notebookEditorFocused && editorLangId == 'markdown'"
+  },
+  {
+    "key": "cmd+k p",
+    "command": "markdown.showPreviewToSide",
+    "when": "!notebookEditorFocused && editorLangId == 'markdown'"
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // 🔧 OUTLINE & SYMBOLS
+  // ═══════════════════════════════════════════════════════════════════════════════
+  {
+    "key": "cmd+shift+o",
+    "command": "outline.focus",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "cmd+shift+o",
+    "command": "outline.focus",
+    "when": "!editorTextFocus && !sideBarFocus"
+  },
+  {
+    "key": "cmd+u 3",
+    "command": "outline.focus"
+  },
+  {
+    "key": "shift+cmd+3",
+    "command": "outline.focus",
+    "when": "sideBarFocus"
+  },
+  {
+    "key": "cmd+shift+.",
+    "command": "breadcrumbs.focusAndSelect",
+    "when": "editorTextFocus"
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // 🛠️ MISCELLANEOUS & SYSTEM
+  // ═══════════════════════════════════════════════════════════════════════════════
+  {
+    "key": "cmd+9",
+    "command": "workbench.action.showEditorActions",
+    "when": "!editorActionsVisible"
+  },
+  {
+    "key": "cmd+g a",
+    "command": "workbench.action.showEditorActions"
+  },
+  {
+    "key": "shift+cmd+o",
+    "command": "workbench.action.output.toggleOutput",
+    "when": "workbench.panel.output.active"
+  },
+  {
+    "key": "cmd+r",
+    "command": "workbench.action.reloadWindow"
+  },
+  {
+    "key": "cmd+shift+r",
+    "command": "workbench.action.reloadWindowWithExtensionsDisabled"
+  },
+  {
+    "key": "cmd+capslock",
+    "command": "mergeEditor.toggleBetweenInputs",
+    "when": "isMergeEditor"
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // 🚫 DISABLED DEFAULT SHORTCUTS
+  // ═══════════════════════════════════════════════════════════════════════════════
+  {
+    "key": "cmd+o",
+    "command": "-workbench.action.files.openFolderViaWorkspace",
+    "when": "!openFolderWorkspaceSupport && workbenchState == 'workspace'"
+  },
+  {
+    "key": "cmd+o",
+    "command": "-workbench.action.files.openFileFolder",
+    "when": "isMacNative && openFolderWorkspaceSupport"
+  },
+  {
+    "key": "cmd+o",
+    "command": "-workbench.action.files.openFile",
+    "when": "false"
+  },
+  {
+    "key": "cmd+o",
+    "command": "-workbench.action.files.openLocalFileFolder",
+    "when": "remoteFileDialogVisible"
+  },
+  {
+    "key": "cmd+k alt+cmd+right",
+    "command": "-workbench.action.nextEditorInGroup"
+  },
+  {
+    "key": "ctrl+0",
+    "command": "-workbench.action.lastEditorInGroup"
+  },
+  {
+    "key": "cmd+9",
+    "command": "-workbench.action.lastEditorInGroup"
+  },
+  {
+    "key": "shift+cmd+[",
+    "command": "-workbench.action.previousEditor"
+  },
+  {
+    "key": "shift+cmd+]",
+    "command": "-workbench.action.nextEditor"
+  },
+  {
+    "key": "cmd+p",
+    "command": "-workbench.action.quickOpen"
+  },
+  {
+    "key": "shift+cmd+o",
+    "command": "-workbench.action.gotoSymbol",
+    "when": "!accessibilityHelpIsShown && !accessibleViewIsShown"
+  },
+  {
+    "key": "cmd+t",
+    "command": "-workbench.action.showAllSymbols"
+  },
+  {
+    "key": "cmd+2",
+    "command": "-workbench.action.focusSecondEditorGroup"
+  },
+  {
+    "key": "ctrl+cmd+down",
+    "command": "-workbench.action.terminal.resizePaneDown",
+    "when": "terminalFocus && terminalHasBeenCreated || terminalFocus && terminalProcessSupported"
+  },
+  {
+    "key": "ctrl+cmd+left",
+    "command": "-workbench.action.terminal.resizePaneLeft",
+    "when": "terminalFocus && terminalHasBeenCreated || terminalFocus && terminalProcessSupported"
+  },
+  {
+    "key": "ctrl+cmd+right",
+    "command": "-workbench.action.terminal.resizePaneRight",
+    "when": "terminalFocus && terminalHasBeenCreated || terminalFocus && terminalProcessSupported"
+  },
+  {
+    "key": "ctrl+cmd+up",
+    "command": "-workbench.action.terminal.resizePaneUp",
+    "when": "terminalFocus && terminalHasBeenCreated || terminalFocus && terminalProcessSupported"
+  },
+  {
+    "key": "cmd+f",
+    "command": "-workbench.action.terminal.focusFind",
+    "when": "terminalFindFocused && terminalHasBeenCreated || terminalFindFocused && terminalProcessSupported || terminalFocusInAny && terminalHasBeenCreated || terminalFocusInAny && terminalProcessSupported"
+  },
+  {
+    "key": "cmd+f",
+    "command": "-actions.find",
+    "when": "editorFocus || editorIsOpen"
+  },
+  {
+    "key": "shift+cmd+u",
+    "command": "-workbench.action.output.toggleOutput",
+    "when": "workbench.panel.output.active"
+  },
+  {
+    "key": "cmd+n",
+    "command": "-chatEditor.action.undoHunk",
+    "when": "chatEdits.hasEditorModifications && editorFocus && !chatEdits.isRequestInProgress || chatEdits.hasEditorModifications && notebookCellListFocused && !chatEdits.isRequestInProgress"
+  },
+  {
+    "key": "cmd+b",
+    "command": "-workbench.action.toggleSidebarVisibility"
+  },
+  {
+    "key": "cmd+[",
+    "command": "-editor.action.outdentLines",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+  {
+    "key": "shift+cmd+t",
+    "command": "-mergeEditor.toggleBetweenInputs",
+    "when": "isMergeEditor"
+  },
+  {
+    "key": "cmd+k s",
+    "command": "-workbench.action.files.saveWithoutFormatting"
+  },
+  {
+    "key": "alt+cmd+s",
+    "command": "-saveAll"
+  }
+]

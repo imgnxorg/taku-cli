@@ -85,14 +85,30 @@ if [[ "$1" == "init" ]]; then
   # Use Node.js script to parse config and write to .env file in hidden directory
   TAKU_ENV_DIR=".taku"
   mkdir -p "$TAKU_ENV_DIR"
+  # Generate a unique env file name using uuidgen or date fallback
+  if command -v uuidgen >/dev/null 2>&1; then
+    ENV_UUID=$(uuidgen)
+  else
+    ENV_UUID=$(date +%s%N)
+  fi
+  TAKU_ENV_FILE="$TAKU_ENV_DIR/config.env"
+  export TAKU_ENV_UUID="$ENV_UUID"
   if command -v node >/dev/null 2>&1; then
-    node "$CLI_DIR/src/taku.config.parse.js" "$TAKU_ENV_DIR/config.env"
-    if [[ ! -f "$TAKU_ENV_DIR/config.env" ]]; then
-      echo "❌ Failed to generate $TAKU_ENV_DIR/config.env."
+    echo "DEBUG: CLI_DIR=$CLI_DIR"
+    echo "DEBUG: TAKU_ENV_DIR=$TAKU_ENV_DIR"
+    echo "DEBUG: TAKU_ENV_FILE=$TAKU_ENV_FILE"
+    echo "DEBUG: ENV_UUID=$ENV_UUID"
+    echo "DEBUG: SELECTED_FRAMEWORKS=${SELECTED_FRAMEWORKS[*]}"
+    echo "DEBUG: TAKU_SELECTED_FRAMEWORKS=$TAKU_SELECTED_FRAMEWORKS"
+    echo "DEBUG: node version: $(node --version)"
+    TAKU_ENV_UUID="$ENV_UUID" node "$CLI_DIR/src/taku.config.parse.js" "$TAKU_ENV_FILE"
+    if [[ ! -f "$TAKU_ENV_FILE" ]]; then
+      echo "❌ Failed to generate $TAKU_ENV_FILE."
       exit 1
     fi
     # shellcheck disable=SC1091
-    source "$TAKU_ENV_DIR/config.env"
+    # shellcheck disable=SC1090
+    source "$TAKU_ENV_FILE"
   else
     echo "❌ Node.js is required to parse taku.config.js."
     exit 1

@@ -1,10 +1,15 @@
 #!/usr/bin/env node
-const { spawn } = require("child_process");
-const path = require("path");
+import { spawn, execSync } from "child_process";
+import path from "path";
 
-const script = path.join(__dirname, "main.sh");
+// Path to the bash script
+const scriptPath = path.join(__dirname, "main.sh");
+
+// Run the bash script synchronously
+execSync(`bash ${scriptPath}`, { stdio: "inherit" });
+
+// Run the bash script asynchronously with passed arguments
 const args = process.argv.slice(2);
-
-const child = spawn(script, args, { stdio: "inherit" });
+const child = spawn(scriptPath, args, { stdio: "inherit" });
 
 child.on("exit", (code) => process.exit(code));

@@ -1,0 +1,36 @@
+name: Build Taku CLI
+
+on:
+  push:
+    branches:
+      - main  # Trigger on pushes to the main branch
+  release:
+    types:
+      - published  # Trigger when a new release is published
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Use Ubuntu, but you can also use macOS or Windows
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'  # Specify the Node.js version you want to use
+
+      - name: Install dependencies
+        run: |
+          yarn install  # Use yarn, but npm install would work as well
+
+      - name: Build package with pkg
+        run: |
+          yarn build  # This will call `pkg .` as defined in the package.json build script
+
+      - name: Upload built binaries
+        uses: actions/upload-artifact@v2
+        with:
+          name: taku-cli-binaries
+          path: ./dist  # Path to the folder where pkg outputs the binaries
