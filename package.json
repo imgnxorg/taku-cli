@@ -1,15 +1,15 @@
 {
   "name": "gittaku",
-  "version": "2.6.290",
+  "version": "2.6.291",
   "description": "Taku CLI: Project generator and utility for the Taku framework.",
   "bin": {
     "taku": "./cli.js"
   },
   "scripts": {
     "build": "pkg . --out-path ./dist --targets node16-linux-x64,node16-macos-x64,node16-win-x64",
-    "prepublishOnly": "yarn build",  // Run build before publishing
-    "prepare": "yarn build",  // Optional: Run build before both publishing and when installing from Git
-    "start": "node cli.js"  // Optional: For testing locally
+    "prepublishOnly": "yarn build",
+    "prepare": "yarn build",
+    "start": "node cli.js"
   },
   "type": "module",
   "author": "Donald Moore @imgnx <donaldwaynemoorejr@gmail.com>",
