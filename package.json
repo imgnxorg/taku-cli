@@ -6,10 +6,10 @@
     "taku": "./cli.js"
   },
   "scripts": {
-    "build": "pkg . --debug --out-path ./bin --targets node16-linux-x64,node16-macos-x64,node16-win-x64",
+    "build": "esbuild cli.js --bundle --platform=node --outfile=dist/cli.js --format=esm --packages=external && esbuild src/taku.config.parse.js --bundle --platform=node --outfile=dist/taku.config.parse.js --format=esm --packages=external",
     "prepublishOnly": "yarn build",
     "prepare": "yarn build",
-    "start": "node cli.js"
+    "start": "node dist/cli.js"
   },
   "type": "module",
   "author": "Donald Moore @imgnx <donaldwaynemoorejr@gmail.com>",
