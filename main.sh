@@ -8,8 +8,8 @@ MIN_WIDTH=50
 TERM_WIDTH=$(tput cols 2>/dev/null || echo 80)
 if [[ "$TERM_WIDTH" -ge "$MIN_WIDTH" ]]; then
   cat <<EOF
-             .                    
-           .'|                    
+                     .                    
+                   .'|                    
    .|            .'  |                    
    .' |_     __   <    |                    
  .'     | .:--.'.  |   | ____      _    _   
@@ -55,6 +55,7 @@ while [[ $# -gt 0 ]]; do
     shift
     ;;
   --all)
+    # shellcheck disable=SC2034
     BUILD_TARGET="all"
     shift
     ;;
@@ -268,6 +269,32 @@ fn main() -> wry::Result<()> {
     });
 }
 EOF
+
+# ---- Download and Import Taku Frame Config ----
+CONFIG_URL="https://raw.githubusercontent.com/imgnxorg/taku/main/taku-frame/export/taku.config.zip"
+CONFIG_ZIP="taku.config.zip"
+# shellcheck disable=SC2034
+CONFIG_DEST="taku.config.js"
+
+# Download the latest config zip from GitHub
+if command -v curl >/dev/null 2>&1; then
+  curl -fsSL "$CONFIG_URL" -o "$CONFIG_ZIP"
+elif command -v wget >/dev/null 2>&1; then
+  wget -q "$CONFIG_URL" -O "$CONFIG_ZIP"
+else
+  echo "❌ Neither curl nor wget is installed. Cannot download config."
+  exit 1
+fi
+
+# Unzip the config file
+if command -v unzip >/dev/null 2>&1; then
+  unzip -o "$CONFIG_ZIP" -d .
+  echo "✅ Imported taku.config.js from frame."
+  rm -f "$CONFIG_ZIP"
+else
+  echo "❌ unzip is not installed. Cannot extract config."
+  exit 1
+fi
 
 # ---- Frontend: Framework + Demo ----
 echo "📦 Setting up frontend (React+Tailwind)..."

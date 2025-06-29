@@ -1,0 +1,16 @@
+{
+  "folders": [
+    {
+      "name": "example",
+      "path": "../timbrewolf3"
+    },
+    {
+      "name": "taku-cli",
+      "path": "."
+    },
+    {
+      "name": "taku-frame",
+      "path": "../taku-frame"
+    }
+  ]
+}
