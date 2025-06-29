@@ -1,9 +1,9 @@
 {
   "name": "@imgnx/taku",
-  "version": "0.1.0",
+  "version": "2.0.1",
   "description": "Taku CLI: Project generator and utility for the Taku framework.",
   "bin": {
-    "taku": "main.sh"
+    "taku": "./cli.js"
   },
   "author": "Donald Moore @imgnx <donaldwaynemoorejr@gmail.com>",
   "license": "0BSD",
