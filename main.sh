@@ -270,6 +270,34 @@ fn main() -> wry::Result<()> {
 }
 EOF
 
+# ---- Taku Init Command ----
+if [[ "$1" == "init" ]]; then
+  CONFIG_URL="https://raw.githubusercontent.com/imgnxorg/taku/main/export/taku.config.zip"
+  CONFIG_ZIP="taku.config.zip"
+  # shellcheck disable=SC2034
+  CONFIG_DEST="taku.config.js"
+
+  echo "🌐 Downloading Taku config from downstream..."
+  if command -v curl >/dev/null 2>&1; then
+    curl -fsSL "$CONFIG_URL" -o "$CONFIG_ZIP"
+  elif command -v wget >/dev/null 2>&1; then
+    wget -q "$CONFIG_URL" -O "$CONFIG_ZIP"
+  else
+    echo "❌ Neither curl nor wget is installed. Cannot download config."
+    exit 1
+  fi
+
+  if command -v unzip >/dev/null 2>&1; then
+    unzip -o "$CONFIG_ZIP" -d .
+    echo "✅ Imported taku.config.js from downstream."
+    rm -f "$CONFIG_ZIP"
+  else
+    echo "❌ unzip is not installed. Cannot extract config."
+    exit 1
+  fi
+  exit 0
+fi
+
 # ---- Download and Import Taku Frame Config ----
 CONFIG_URL="https://raw.githubusercontent.com/imgnxorg/taku/main/taku-frame/export/taku.config.zip"
 CONFIG_ZIP="taku.config.zip"
