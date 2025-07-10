@@ -1,0 +1,44 @@
+#!/bin/bash
+# shellcheck shell=bash
+
+COMMIT_MSG_FILE=w$1
+COMMIT_SOURCE=$2
+SHA1=$3
+
+# Skip for merge commits
+if [[ -n "$COMMIT_SOURCE" ]]; then
+    exit 0
+fi
+
+# Define valid commit types
+valid_types=(feat fix docs style refactor test chore)
+
+echo "Select commit type:"
+select type in "${valid_types[@]}"; do
+    if [[ -n "$type" ]]; then
+        break
+    fi
+done
+
+echo "Enter scope (optional, press enter to skip):"
+read scope
+
+while true; do
+    echo "Enter commit message:"
+    read message
+    if [[ -n "$message" ]]; then
+        break
+    else
+        echo "❌ Commit message cannot be empty. Please enter a message."
+    fi
+done
+
+# Format commit message
+if [[ -n "$scope" ]]; then
+    final_message="$type($scope): $message"
+else
+    final_message="$type: $message"
+fi
+
+# Save the formatted commit message
+echo "$final_message" >"$COMMIT_MSG_FILE"

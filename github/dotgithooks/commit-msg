@@ -1,0 +1,22 @@
+#!/bin/bash
+# shellcheck shell=bash
+
+# Path to commit message file
+COMMIT_MSG_FILE=$1
+
+# Define regex pattern for Semantic Commit Messages
+COMMIT_REGEX='^(feat|fix|docs|style|refactor|test|chore)(\(.+\))?: .{1,}$'
+
+# Read the commit message
+commit_message=$(cat "$COMMIT_MSG_FILE")
+
+# Check if the commit message follows the Semantic Commit pattern
+if ! echo "$commit_message" | grep -Eq "$COMMIT_REGEX"; then
+  echo "❌ Commit message does not follow Semantic Commit format."
+  echo "   Expected format: <type>(<scope>): <message>"
+  echo "   Example: feat(ui): add dark mode support"
+  echo "   Allowed types: feat, fix, docs, style, refactor, test, chore"
+  exit 1
+fi
+
+exit 0

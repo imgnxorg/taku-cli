@@ -3,10 +3,11 @@
 
 set -euo pipefail
 
-# ---- Terminal Width Check & ASCII Art ----
-MIN_WIDTH=50
-TERM_WIDTH=$(tput cols 2>/dev/null || echo 80)
-if [[ "$TERM_WIDTH" -ge "$MIN_WIDTH" ]]; then
+# === Terminal Width Check & ASCII Art ===
+MIN_WIDTH=20
+TERMINAL_WIDTH=$(tput cols 2>/dev/null || echo 80)
+echo "TERMINAL_WIDTH: $TERMINAL_WIDTH"
+if [[ "$TERMINAL_WIDTH" -ge "$MIN_WIDTH" ]]; then
   cat <<EOF
 ▗▄▄▄▖▗▄▖ ▗▖ ▗▖▗▖ ▗▖
   █ ▐▌ ▐▌▐▌▗▞▘▐▌ ▐▌
@@ -16,39 +17,57 @@ if [[ "$TERM_WIDTH" -ge "$MIN_WIDTH" ]]; then
 EOF
 fi
 
-# ---- Framework Selection Switch ----
-SUPPORTED_FRAMEWORKS=("react" "rust" "workers (beta)")
+# === Framework Selection Switch ===
+# SUPPORTED_FRAMEWORKS=("react" "rust" "workers (beta)")
 SELECTED_FRAMEWORKS=()
 
-echo "Select frameworks to include in your project:"
-for i in "${!SUPPORTED_FRAMEWORKS[@]}"; do
-  printf "  [%d] %s\n" $((i + 1)) "${SUPPORTED_FRAMEWORKS[$i]}"
-done
-echo "Enter numbers separated by spaces (e.g. 1 2), or press Enter for all: "
-read -r FRAMEWORK_SELECTION
+# echo "Select frameworks to include in your project:"
+# for i in "${!SUPPORTED_FRAMEWORKS[@]}"; do
+#   printf "  [%d] %s\n" $((i + 1)) "${SUPPORTED_FRAMEWORKS[$i]}"
+# done
+# echo "Enter numbers separated by spaces (e.g. 1 2), or press Enter for all: "
+# read -r FRAMEWORK_SELECTION
 
-if [[ -z "$FRAMEWORK_SELECTION" ]]; then
-  SELECTED_FRAMEWORKS=("${SUPPORTED_FRAMEWORKS[@]}")
-else
-  for idx in $FRAMEWORK_SELECTION; do
-    if [[ "$idx" =~ ^[0-9]+$ ]] && ((idx >= 1 && idx <= ${#SUPPORTED_FRAMEWORKS[@]})); then
-      SELECTED_FRAMEWORKS+=("${SUPPORTED_FRAMEWORKS[$((idx - 1))]}")
-    else
-      echo "Invalid selection: $idx"
-      exit 1
-    fi
-  done
-fi
+# if [[ -z "$FRAMEWORK_SELECTION" ]]; then
+#   SELECTED_FRAMEWORKS=("${SUPPORTED_FRAMEWORKS[@]}")
+# else
+#   for idx in $FRAMEWORK_SELECTION; do
+#     if [[ "$idx" =~ ^[0-9]+$ ]] && ((idx >= 1 && idx <= ${#SUPPORTED_FRAMEWORKS[@]})); then
+#       SELECTED_FRAMEWORKS+=("${SUPPORTED_FRAMEWORKS[$((idx - 1))]}")
+#     else
+#       echo "Invalid selection: $idx"
+#       exit 1
+#     fi
+#   done
+# fi
 
 # Export as comma-separated for later use
-export TAKU_SELECTED_FRAMEWORKS="$(
+# export TAKU_SELECTED_FRAMEWORKS="$(
+#   IFS=,
+#   echo "${SELECTED_FRAMEWORKS[*]}"
+# )"
+# echo "Selected frameworks: $TAKU_SELECTED_FRAMEWORKS"
+
+# For now, select all supported frameworks except "workers (beta)"
+SELECTED_FRAMEWORKS=("react" "rust")
+
+# Export as comma-separated for later use
+TAKU_SELECTED_FRAMEWORKS="$(
   IFS=,
   echo "${SELECTED_FRAMEWORKS[*]}"
 )"
-echo "Selected frameworks: $TAKU_SELECTED_FRAMEWORKS"
+export TAKU_SELECTED_FRAMEWORKS
 
-# ---- Taku Init Command ----
-if [[ "$1" == "init" ]]; then
+if [[ -z "$1" ]]; then
+  echo "Usage: $0 <command>"
+  echo "Available commands: init"
+  exit 1
+fi
+
+cmd="$1"
+
+# === Taku Init Command ===
+if [[ "$cmd" == "init" ]]; then
   CONFIG_URL="https://github.com/imgnxorg/taku/raw/refs/heads/main/export/taku.config.zip"
   CONFIG_ZIP="taku.config.zip"
   # shellcheck disable=SC2034
@@ -73,7 +92,7 @@ if [[ "$1" == "init" ]]; then
     exit 1
   fi
 
-  # ---- Parse and Use Config ----
+  # === Parse and Use Config ===
   if [[ ! -f taku.config.js ]]; then
     echo "❌ taku.config.js not found after extraction."
     exit 1
@@ -174,7 +193,7 @@ EOW
   exit 0
 fi
 
-# ---- Usage & Argument Parsing ----
+# === Usage & Argument Parsing ===
 usage() {
   echo -e "\nUsage: $0 [-n project_name] [--frontend|--backend|--all]"
   echo -e "  -n project_name   Set the project name (default: taku-demo-app)"
@@ -224,7 +243,7 @@ done
 FRAMEWORK_NAME="Taku"
 DEMO_NAME="timbre-tool-demo"
 
-# ---- Tool Checks ----
+# === Tool Checks ===
 for tool in cargo yarn; do
   if ! command -v $tool >/dev/null 2>&1; then
     echo "❌ Required tool '$tool' is not installed. Please install it and try again."
@@ -232,13 +251,13 @@ for tool in cargo yarn; do
   fi
 done
 
-# ---- Project Directory Check ----
+# === Project Directory Check ===
 if [ -d "$PROJECT_NAME" ]; then
   echo "❌ Directory '$PROJECT_NAME' already exists. Please choose a different project name or remove the directory."
   exit 1
 fi
 
-# ---- Create Project Structure ----
+# === Create Project Structure ===
 echo "📁 Creating $FRAMEWORK_NAME project structure..."
 mkdir -p "$PROJECT_NAME"/frontend/src
 mkdir -p "$PROJECT_NAME"/frontend/public
@@ -247,11 +266,11 @@ mkdir -p "$PROJECT_NAME"/assets
 mkdir -p "$PROJECT_NAME"/examples/$DEMO_NAME
 cd "$PROJECT_NAME" || exit
 
-# ---- Initialize Rust Project ----
+# === Initialize Rust Project ===
 echo "🦀 Initializing Rust backend..."
 cargo init --name taku
 
-# ---- Framework Cargo.toml ----
+# === Framework Cargo.toml ===
 echo "⚙️ Setting up Rust dependencies..."
 cat <<EOF >Cargo.toml
 [package]
@@ -273,7 +292,7 @@ name = "taku"
 path = "src/main.rs"
 EOF
 
-# ---- Core Framework: Database Service ----
+# === Core Framework: Database Service ===
 echo "🗄️ Creating Taku database service..."
 cat <<EOF >src/database.rs
 // Taku Framework: Database Service
@@ -373,7 +392,7 @@ impl DatabaseService {
 }
 EOF
 
-# ---- Core Framework: Tao/Wry Main ----
+# === Core Framework: Tao/Wry Main ===
 echo "🖥️ Creating Taku Tao/Wry main app..."
 cat <<EOF >src/main.rs
 // Taku Framework: Main Application
@@ -422,7 +441,7 @@ fn main() -> wry::Result<()> {
 }
 EOF
 
-# ---- Download and Import Taku Frame Config ----
+# === Download and Import Taku Frame Config ===
 CONFIG_URL="https://raw.githubusercontent.com/imgnxorg/taku/main/taku-frame/export/taku.config.zip"
 CONFIG_ZIP="taku.config.zip"
 # shellcheck disable=SC2034
@@ -448,7 +467,7 @@ else
   exit 1
 fi
 
-# ---- Frontend: Framework + Demo ----
+# === Frontend: Framework + Demo ===
 echo "📦 Setting up frontend (React+Tailwind)..."
 cat <<EOF >frontend/package.json
 {
@@ -488,7 +507,7 @@ cat <<EOF >frontend/package.json
 }
 EOF
 
-# ---- TailwindCSS Configuration ----
+# === TailwindCSS Configuration ===
 echo "🎨 Setting up TailwindCSS configuration..."
 cat <<EOF >frontend/tailwind.config.js
 /** @type {import('tailwindcss').Config} */
@@ -510,7 +529,7 @@ export default {{
 }};
 EOF
 
-# ---- Webpack Configuration ----
+# === Webpack Configuration ===
 echo "📦 Setting up Webpack configuration..."
 cat <<EOF >frontend/webpack.config.js
 // Generated using webpack-cli https://github.com/webpack/webpack-cli
@@ -586,7 +605,7 @@ export default () => {{
 }};
 EOF
 
-# ---- Frontend HTML Template ----
+# === Frontend HTML Template ===
 echo "📄 Setting up frontend/public/index.html..."
 mkdir -p frontend/public
 cat <<EOF >frontend/public/index.html
@@ -603,7 +622,7 @@ cat <<EOF >frontend/public/index.html
 </html>
 EOF
 
-# ---- Frontend Entry Point ----
+# === Frontend Entry Point ===
 echo "⚡ Setting up frontend/src/index.jsx..."
 mkdir -p frontend/src
 cat <<EOF >frontend/src/index.jsx
@@ -617,7 +636,7 @@ const root = createRoot(container);
 root.render(<App />);
 EOF
 
-# ---- Global CSS with Tailwind ----
+# === Global CSS with Tailwind ===
 echo "🎨 Setting up frontend/src/styles/global.css..."
 mkdir -p frontend/src/styles
 cat <<EOF >frontend/src/styles/global.css
@@ -641,7 +660,7 @@ code {
 }
 EOF
 
-# ---- Demo App: Timbre Tool (React) ----
+# === Demo App: Timbre Tool (React) ===
 echo "🎹 Adding timbre tool demo (example app)..."
 cat <<EOF >frontend/src/App.jsx
 // Taku Example: Timbre Tool Demo with IPC Example
@@ -688,7 +707,7 @@ export default function App() {
 }
 EOF
 
-# ---- Build Script ----
+# === Build Script ===
 echo "🔨 Creating build script..."
 cat <<'EOF' >build.sh
 #!/bin/bash
@@ -743,7 +762,7 @@ for name in "$@"; do
   fi
 done
 
-# ---- macOS .app Bundling (Optional) ----
+# === macOS .app Bundling (Optional) ===
 echo "🍏 macOS .app bundling instructions:"
 echo "# To bundle as a macOS .app, add your bundling logic here."
 echo "# You may use tools like cargo-bundle, create-dmg, or custom scripts."
@@ -759,3 +778,18 @@ echo "1. cd ${PROJECT_NAME}"
 echo "2. ./build.sh"
 echo ""
 echo "Taku is ready. Replace the timbre tool demo with your own app!"
+
+# === Taku Run Command ===
+if [[ "$cmd" == "run" ]]; then
+  echo "🚀 Executing Taku run command..."
+  # Define your run logic here
+  echo "Running the application..."
+  # Example: Start a local server or execute a specific script
+  if command -v node >/dev/null 2>&1; then
+    node dist/cli.js
+  else
+    echo "❌ Node.js is required to run the application."
+    exit 1
+  fi
+  exit 0
+fi

@@ -1,16 +1,26 @@
 {
   "folders": [
     {
-      "name": "example",
-      "path": "../timbrewolf3"
-    },
-    {
       "name": "taku-cli",
-      "path": "."
+      "path": ".",
     },
+
     {
       "name": "taku-frame",
-      "path": "../taku-frame"
-    }
-  ]
+      "path": "../taku-frame",
+    },
+
+    {
+      "name": "update",
+      "path": "../update",
+    },
+    {
+      "name": "init",
+      "path": "../init",
+    },
+    {
+      "name": "safeguard (cli argument parser)",
+      "path": "../safeguard",
+    },
+  ],
 }

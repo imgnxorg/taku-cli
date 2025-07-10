@@ -1,0 +1,10 @@
+{
+  "name": "${name}",
+  "devDependencies": {
+    "husky": "^9.1.7"
+  },
+  "scripts": {
+    "prepare": "husky"
+  },
+  "packageManager": "yarn@4.6.0"
+}
